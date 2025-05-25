@@ -62,6 +62,24 @@ class GeminiManager:
             self.system_prompt = f.read()
         self.messages = []
         self.set_modes(modes)
+        self.safety_settings = [
+            {
+                "category": "HARM_CATEGORY_HARASSMENT",
+                "threshold": "BLOCK_NONE",
+            },
+            {
+                "category": "HARM_CATEGORY_HATE_SPEECH",
+                "threshold": "BLOCK_NONE",
+            },
+            {
+                "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                "threshold": "BLOCK_NONE",
+            },
+            {
+                "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                "threshold": "BLOCK_NONE",
+            },
+        ]
 
     def get_current_modes(self):
         return [mode.name for mode in self.modes]
@@ -99,6 +117,7 @@ class GeminiManager:
                 system_instruction=self.system_prompt,
                 temperature=0.2,
                 tools=tools,
+                safety_settings=self.safety_settings,
             ),
         )
 
