@@ -40,7 +40,7 @@ class Mode(Enum):
 
 
 def format_tool_response(response, indent=2):
-    return json.dumps(response, indent=indent).encode('utf-8').decode('unicode_escape')
+    return json.dumps(response, indent=indent, ensure_ascii=False)
 
 
 class GeminiManager:
