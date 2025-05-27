@@ -30,12 +30,12 @@ class AgentCostManager():
             "create_resource_cost": 28,
             "invoke_resource_cost": 35,
         },
-        "gemini-2.5-flash-preview-04-17": {
+        "gemini-2.5-flash-preview-05-20": {
             "description": "Avg Accuracy: 75.8%, 82.8% on LegalBench, 81.6% on multi-task understanding, 91.6% on Math",
             "create_expense_cost": 0,
             "invoke_expense_cost": 0.15,
         },
-        "gemini-2.5-pro-preview-05-06": {
+        "gemini-2.5-pro-exp-03-25": {
             "description": "Avg Accuracy: 64.3%, 83.6% on LegalBench, 84.1% on multi-task understanding, 95.2% on Math, 63.8% on Coding",
             "create_expense_cost": 0,
             "invoke_expense_cost": 1.25,
