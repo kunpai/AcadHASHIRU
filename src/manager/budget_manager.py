@@ -46,7 +46,7 @@ class BudgetManager():
         ram_mem = mem.total/ 1024 ** 3
         print("No GPU detected. Using CPU.")
         print(f"Total RAM: {ram_mem:.2f} GB")
-        total_mem = gpu_mem + ram_mem/4
+        total_mem = gpu_mem + ram_mem
         return round((total_mem / 16) * 100)
 
     def get_total_resource_budget(self):
