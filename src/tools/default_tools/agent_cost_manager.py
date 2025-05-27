@@ -6,7 +6,7 @@ class AgentCostManager():
 
     inputSchema = {
         "name": "AgentCostManager",
-        "description": "Retrieves the cost of creating and invoking an agent. Please make sure to use this before creating an agent.",
+        "description": "Retrieves the cost of creating and invoking an agent. Also includes the strengths of each model. Please make sure to use this before creating an agent.",
         "parameters": {
             "type": "object",
             "properties": {},
@@ -16,42 +16,42 @@ class AgentCostManager():
 
     costs = {
         "llama3.2": {
-            "description": "The Llama 3.2 instruction-tuned text only models are optimized for multilingual dialogue use cases, including agentic retrieval and summarization tasks. They outperform many of the available open source and closed chat models on common industry benchmarks.",
+            "description": "Avg Accuracy: 49.75%, Latency 0.9s, 63.4% on multi-task understanding, 40.8% on rewriting, 78.6% on reasoning.",
             "create_resource_cost": 50,
             "invoke_resource_cost": 30,
         },
         "mistral": {
-            "description": "One of the most powerful open source models for its size. It is vastly superior in code and reasoning benchmarks.",
+            "description": "Avg Accuracy: 51.3%, Latency 9.7s, 51% on LegalBench, 60.1% on multi-task understanding, 69.9% on TriviaQA, 67.9% on reasoning",
             "create_resource_cost": 75,
             "invoke_resource_cost": 40,
         },
         "deepseek-r1": {
-            "description": "DeepSeek's first-generation reasoning models, achieving performance comparable to OpenAI-o1 across math, code, and reasoning tasks.",
+            "description": "Avg Accuracy: 77.3%, Latency: 120s, 69.9% on LegalBench, 71.1% on multi-task understanding, 92.2% on Math",
             "create_resource_cost": 28,
             "invoke_resource_cost": 35,
         },
         "gemini-2.5-flash-preview-04-17": {
-            "description": "Adaptive thinking, cost efficiency",
+            "description": "Avg Accuracy: 75.8%, 82.8% on LegalBench, 81.6% on multi-task understanding, 91.6% on Math",
             "create_expense_cost": 0,
             "invoke_expense_cost": 0.15,
         },
         "gemini-2.5-pro-preview-05-06": {
-            "description": "Enhanced thinking and reasoning, multimodal understanding, advanced coding, and more",
+            "description": "Avg Accuracy: 64.3%, 83.6% on LegalBench, 84.1% on multi-task understanding, 95.2% on Math, 63.8% on Coding",
             "create_expense_cost": 0,
             "invoke_expense_cost": 1.25,
         },
         "gemini-2.0-flash": {
-            "description": "Next generation features, speed.",
+            "description": "Avg Accuracy: 64.3%, 79.9% on LegalBench, 77.4% on multi-task understanding, 90.9% on Math, 34.5% on Coding",
             "create_expense_cost": 0,
             "invoke_expense_cost": 0.10,
         },
         "gemini-2.0-flash-lite": {
-            "description": "Cost efficiency and low latency",
+            "description": "Avg Accuracy: 64.1%, 71.6% on multi-task understanding, 86.8% on Math, 28.9% on Coding",
             "create_expense_cost": 0,
             "invoke_expense_cost": 0.075
         },
         "gemini-1.5-flash": {
-            "description": "Fast and versatile performance across a diverse variety of tasks",
+            "description": "62.0% on LegalBench, 61.0% on MMLU, 59.0% on MATH",
             "create_expense_cost": 0,
             "invoke_expense_cost": 0.075,
         },
@@ -60,16 +60,6 @@ class AgentCostManager():
             "create_expense_cost": 0,
             "invoke_expense_cost": 0.0375,
         },
-        "gemini-1.5-pro": {
-            "description": "Complex reasoning tasks requiring more intelligence",
-            "create_expense_cost": 0,
-            "invoke_expense_cost": 1.25,
-        },
-        "gemini-2.0-flash-live-001": {
-            "description": "Low-latency bidirectional voice and video interactions",
-            "create_expense_cost": 0,
-            "invoke_expense_cost": 0.50,
-        }
     }
 
     def get_costs(self):
