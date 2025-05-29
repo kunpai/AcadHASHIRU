@@ -60,6 +60,11 @@ class AgentCostManager():
             "create_expense_cost": 0,
             "invoke_expense_cost": 0.0375,
         },
+        "groq-qwen-qwq-32b": {
+            "description": "Avg Accuracy: 60.0%, 70.0% on multi-task understanding, 80.0% on Math",
+            "create_expense_cost": 0,
+            "invoke_expense_cost": 0.05,
+        },
     }
 
     def get_costs(self):

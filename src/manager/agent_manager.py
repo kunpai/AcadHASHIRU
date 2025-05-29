@@ -147,42 +147,71 @@ class GroqAgent(Agent):
     def __init__(
         self,
         agent_name: str,
-        base_model: str = "llama-3.3-70b-versatile",
-        system_prompt: str = "system.prompt",
+        base_model: str,
+        system_prompt: str,
+        create_resource_cost: int,
+        invoke_resource_cost: int,
+        create_expense_cost: int = 0,
+        invoke_expense_cost: int = 0,
     ):
-        self.agent_name = agent_name
-        self.base_model = base_model
-        # load API key from environment
+        # Call the parent class constructor first
+        super().__init__(agent_name, base_model, system_prompt,
+                         create_resource_cost, invoke_resource_cost,
+                         create_expense_cost, invoke_expense_cost)
+
+        # Groq-specific API client setup
         api_key = os.getenv("GROQ_API_KEY")
+        if not api_key:
+            raise ValueError("GROQ_API_KEY environment variable not set. Please set it in your .env file or environment.")
         self.client = Groq(api_key=api_key)
-        # read system prompt content
-        with open(system_prompt, 'r') as f:
-            self.system_instruction = f.read()
+
+        if self.base_model and "groq-" in self.base_model:
+            self.groq_api_model_name = self.base_model.split("groq-", 1)[1]
+        else:
+            # Fallback or error if the naming convention isn't followed.
+            # This ensures that if a non-prefixed model name is somehow passed,
+            # it might still work, or you can raise an error.
+            self.groq_api_model_name = self.base_model
+            print(f"Warning: GroqAgent base_model '{self.base_model}' does not follow 'groq-' prefix convention.")
 
     def create_model(self) -> None:
-        # Groq models are available by name; no creation step
+        """
+        Create and Initialize agent.
+        For Groq, models are pre-existing on their cloud.
+        This method is called by Agent's __init__.
+        """
         pass
 
     def ask_agent(self, prompt: str) -> str:
+        """Ask agent a question"""
+        if not self.client:
+            raise ConnectionError("Groq client not initialized. Check API key and constructor.")
+        if not self.groq_api_model_name:
+            raise ValueError("Groq API model name not set. Check base_model configuration.")
+
         messages = [
-            {"role": "system", "content": self.system_instruction},
+            {"role": "system", "content": self.system_prompt},
             {"role": "user", "content": prompt},
         ]
-        response = self.client.chat.completions.create(
-            messages=messages,
-            model=self.base_model,
-        )
-        result = response.choices[0].message.content
-        print(result)
-        return result
+        try:
+            response = self.client.chat.completions.create(
+                messages=messages,
+                model=self.groq_api_model_name, # Use the derived model name for Groq API
+            )
+            result = response.choices[0].message.content
+            return result
+        except Exception as e:
+            # Handle API errors or other exceptions during the call
+            print(f"Error calling Groq API: {e}")
+            raise  # Re-raise the exception or handle it as appropriate
 
     def delete_agent(self) -> None:
-        # No delete support for Groq
+        """Delete agent"""
         pass
 
-    def get_type(self):
+    def get_type(self) -> str: # Ensure return type hint matches Agent ABC
+        """Get agent type"""
         return self.type
-
 
 @singleton
 class AgentManager():
