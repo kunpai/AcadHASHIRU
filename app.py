@@ -230,7 +230,7 @@ with gr.Blocks(title="HASHIRU AI", css=css, fill_width=True, fill_height=True) a
                              multimodal=True,
                              show_progress="full")
 
-app = gr.mount_gradio_app(app, demo, path="/hashiru", auth_dependency=get_user)
+app = gr.mount_gradio_app(app, demo, path="/hashiru", auth_dependency=get_user, ssr_mode=False,)
 
 if __name__ == "__main__":
     import uvicorn
