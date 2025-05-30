@@ -97,7 +97,7 @@ async def logout(request: Request):
     auth0_logout_url = (
         f"https://{AUTH0_DOMAIN}/v2/logout"
         f"?client_id={AUTH0_CLIENT_ID}"
-        f"&returnTo={request.url_for("post-logout")}"
+        f"&returnTo={request.url_for('post-logout')}"
     )
     return RedirectResponse(auth0_logout_url)
 
