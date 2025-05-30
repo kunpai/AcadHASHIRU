@@ -232,4 +232,4 @@ if __name__ == "__main__":
     if no_auth:
         demo.launch(favicon_path="favicon.ico")
     else:
-        uvicorn.run(app, port=7860)
+        uvicorn.run(app)
