@@ -67,17 +67,20 @@ def get_user(request: Request):
 
 @app.get('/')
 def public(request: Request, user=Depends(get_user)):
+    root_url = gr.route_utils.get_root_url(request, "/", None)
     if user:
-        return RedirectResponse("/hashiru")
+        return RedirectResponse(url=f'{root_url}/hashiru/')
     else:
-        return RedirectResponse("/login-page")
+        return RedirectResponse(url=f'{root_url}/login-page')
 
 
 @app.get("/login")
 async def login(request: Request):
     print("Session cookie:", request.cookies.get("session"))
     print("Session data:", dict(request.session))
-    return await oauth.auth0.authorize_redirect(request, request.url_for("auth"), audience=AUTH0_AUDIENCE, prompt="login")
+    root_url = gr.route_utils.get_root_url(request, "/login", None)
+    redirect_uri = f"{root_url}/auth"
+    return await oauth.auth0.authorize_redirect(request, redirect_uri, audience=AUTH0_AUDIENCE, prompt="login")
 
 
 @app.get("/auth")
@@ -86,18 +89,20 @@ async def auth(request: Request):
         token = await oauth.auth0.authorize_access_token(request)
         print("Token received:", token)
         request.session["user"] = token["userinfo"]
-        return RedirectResponse("/")
+        return RedirectResponse("/hashiru")
     except Exception as e:
         print("Error during authentication:", str(e))
-        return JSONResponse({"error": str(e)}, status_code=500)
+        return RedirectResponse("/")
 
 
 @app.get("/logout")
 async def logout(request: Request):
+    root_url = gr.route_utils.get_root_url(request, "/logout", None)
+    redirect_uri = f"{root_url}/post-logout"
     auth0_logout_url = (
         f"https://{AUTH0_DOMAIN}/v2/logout"
         f"?client_id={AUTH0_CLIENT_ID}"
-        f"&returnTo={request.url_for('post-logout')}"
+        f"&returnTo={redirect_uri}"
     )
     return RedirectResponse(auth0_logout_url)
 
