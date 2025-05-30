@@ -1,3 +1,14 @@
+---
+title: HashiruAI
+emoji: 🍆
+colorFrom: green
+colorTo: yellow
+sdk: gradio
+sdk_version: 5.31.0
+app_file: app.py
+pinned: false
+---
+
 # HASHIRU: Hierarchical Agent System for Hybrid Intelligent Resource Utilization
 
 ![HASHIRU_ARCH](HASHIRU_ARCH.png)
