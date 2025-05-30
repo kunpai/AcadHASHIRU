@@ -51,7 +51,6 @@ app.add_middleware(
     session_cookie="session",
     max_age=86400,
     same_site="lax",
-    https_only=False
 )
 
 # 4. Auth routes -------------------------------------------------------
