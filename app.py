@@ -229,7 +229,7 @@ app = gr.mount_gradio_app(app, demo, path="/hashiru", auth_dependency=get_user)
 if __name__ == "__main__":
     import uvicorn
 
-    # if no_auth:
-    demo.launch(favicon_path="favicon.ico")
-    # else:
-        # uvicorn.run(app)
+    if no_auth:
+        demo.launch(favicon_path="favicon.ico")
+    else:
+        uvicorn.run(app, port=7860)
