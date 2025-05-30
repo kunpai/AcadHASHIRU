@@ -84,9 +84,11 @@ async def login(request: Request):
 async def auth(request: Request):
     try:
         token = await oauth.auth0.authorize_access_token(request)
+        print("Token received:", token)
         request.session["user"] = token["userinfo"]
         return RedirectResponse("/")
     except Exception as e:
+        print("Error during authentication:", str(e))
         return JSONResponse({"error": str(e)}, status_code=500)
 
 
