@@ -133,8 +133,6 @@ async def api_login_status(request: Request):
         return {"status": "Logged out"}
 
 
-_logo_bytes = open("HASHIRU_LOGO.png", "rb").read()
-_logo_b64 = base64.b64encode(_logo_bytes).decode()
 _header_html = f"""
 <div style="
     display: flex;
@@ -142,7 +140,7 @@ _header_html = f"""
     align-items: center;
     justify-content: flex-start;
 ">
-  <img src="data:image/png;base64,{_logo_b64}" width="40" class="logo"/>
+  <img src="https://media.githubusercontent.com/media/HASHIRU-AI/HASHIRU/refs/heads/main/HASHIRU_LOGO.png" width="40" class="logo"/>
   <h1>
     HASHIRU AI
   </h1>
@@ -213,7 +211,8 @@ with gr.Blocks(title="HASHIRU AI", css=css, fill_width=True, fill_height=True) a
                     fn=update_model, inputs=model_dropdown, outputs=[])
         with gr.Row(scale=1):
             chatbot = gr.Chatbot(
-                avatar_images=("HASHIRU_2.png", "HASHIRU.png"),
+                avatar_images=("https://media.githubusercontent.com/media/HASHIRU-AI/HASHIRU/refs/heads/main/HASHIRU_2.png", 
+                               "https://media.githubusercontent.com/media/HASHIRU-AI/HASHIRU/refs/heads/main/HASHIRU.png"),
                 type="messages",
                 show_copy_button=True,
                 editable="user",
