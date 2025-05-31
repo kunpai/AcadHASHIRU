@@ -18,3 +18,4 @@ google-genai==1.17.0
 itsdangerous==2.2.0
 setuptools==80.9.0
 torch==2.7.0
+openai==1.82.1

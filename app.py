@@ -198,17 +198,18 @@ with gr.Blocks(title="HASHIRU AI", css=css, fill_width=True, fill_height=True) a
                 gr.Button("Logout", link="/logout")
 
             with gr.Column(scale=1):
-                model_dropdown = gr.Dropdown(
-                    choices=[mode.name for mode in Mode],
-                    value=model_manager.get_current_modes,
-                    interactive=True,
-                    type="index",
-                    multiselect=True,
-                    label="Select Modes",
-                )
+                with gr.Accordion("Model Settings", open=False):
+                    model_dropdown = gr.Dropdown(
+                        choices=[mode.name for mode in Mode],
+                        value=model_manager.get_current_modes,
+                        interactive=True,
+                        type="index",
+                        multiselect=True,
+                        label="Select Modes",
+                    )
 
-                model_dropdown.change(
-                    fn=update_model, inputs=model_dropdown, outputs=[])
+                    model_dropdown.change(
+                        fn=update_model, inputs=model_dropdown, outputs=[])
         with gr.Row(scale=1):
             chatbot = gr.Chatbot(
                 avatar_images=("https://media.githubusercontent.com/media/HASHIRU-AI/HASHIRU/refs/heads/main/HASHIRU_2.png", 
