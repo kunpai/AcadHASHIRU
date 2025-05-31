@@ -47,6 +47,8 @@ class GeminiManager:
     def __init__(self, system_prompt_file="./src/models/system6.prompt",
                  gemini_model="gemini-2.5-pro-exp-03-25",
                  modes: List[Mode] = []):
+        self.input_tokens = 0
+        self.output_tokens = 0
         load_dotenv()
         self.budget_manager = BudgetManager()
 
@@ -110,6 +112,14 @@ class GeminiManager:
                           jitter=None)
     def generate_response(self, messages):
         tools = self.toolsLoader.getTools()
+        response = self.client.models.count_tokens(
+            model=self.model_name,
+            contents=messages,
+        )
+        self.budget_manager.add_to_expense_budget(
+            response.total_tokens * 0.10/1000000  # Assuming $0.10 per million tokens
+        )
+        self.input_tokens += response.total_tokens
         return self.client.models.generate_content_stream(
             model=self.model_name,
             contents=messages,
@@ -141,6 +151,7 @@ class GeminiManager:
                 }
             }
             try:
+                self.input_tokens += len(repr(function_call).split())
                 toolResponse = self.toolsLoader.runTool(
                     function_call.name, function_call.args)
             except Exception as e:
@@ -187,6 +198,7 @@ class GeminiManager:
                     response={"result": f"{function_call.name} with {function_call.args} doesn't follow the required format, please read the other tool implementations for reference." + str(e)})
             parts.append(tool_content)
             i += 1
+        self.output_tokens += len(repr(parts).split())
         yield {
             "role": "tool",
             "content": repr(types.Content(
@@ -305,6 +317,8 @@ class GeminiManager:
         except Exception as e:
             pass
         yield from self.invoke_manager(messages)
+        print("Tokens used: Input: {}, Output: {}".format(
+            self.input_tokens, self.output_tokens))
 
     def invoke_manager(self, messages):
         chat_history = self.format_chat_history(messages)
@@ -342,6 +356,10 @@ class GeminiManager:
                     "role": "assistant",
                     "content": full_text,
                 })
+                self.output_tokens += len(full_text.split())
+                self.budget_manager.add_to_expense_budget(
+                    len(full_text.split()) * 0.40/1000000  # Assuming $0.40 per million tokens
+                )
             if function_call_requests:
                 messages = messages + function_call_requests
             yield messages

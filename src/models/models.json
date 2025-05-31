@@ -1,12 +1,12 @@
 {
-    "Poet": {
-        "base_model": "gemini-1.5-flash",
-        "description": "Agent that writes poems",
-        "system_prompt": "You are an agent that writes poems. When asked to write a poem, you should write a poem on the topic provided.",
-        "create_resource_cost": 0,
-        "invoke_resource_cost": 0,
+    "KunalPaiResearcher": {
+        "base_model": "mistral",
+        "description": "Agent to research and summarize information about Kunal Pai",
+        "system_prompt": "You are an AI agent that specializes in researching individuals based on publicly available information and creating concise summaries of their background, education, work experience, and research interests.",
+        "create_resource_cost": 20,
+        "invoke_resource_cost": 100,
         "create_expense_cost": 0,
-        "invoke_expense_cost": 0.075,
-        "output_expense_cost": 0.3
+        "invoke_expense_cost": 0,
+        "output_expense_cost": 0
     }
 }
