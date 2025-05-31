@@ -3,7 +3,7 @@ from typing import Dict, Type, Any, Optional, Tuple
 import os
 import json
 import ollama
-import requests
+from openai import OpenAI
 from src.manager.utils.singleton import singleton
 from src.manager.utils.streamlit_interface import output_assistant_response
 from google import genai
@@ -233,15 +233,19 @@ class LambdaAgent(Agent):
                  create_expense_cost: int = 0,
                  invoke_expense_cost: int = 0,
                  output_expense_cost: int = 0,
-                 lambda_url: str = "",
                  api_key: str = ""):
-        if not lambda_url:
-            raise ValueError("Lambda URL must be provided for LambdaAgent.")
 
-        self.lambda_url = lambda_url
+        self.lambda_url = "https://api.lambda.ai/v1"
         self.api_key = api_key or os.getenv("LAMBDA_API_KEY")
+
+        self.lambda_model = base_model.split("lambda-")[1] if base_model.startswith("lambda-") else base_model
         if not self.api_key:
             raise ValueError("Lambda API key must be provided or set in LAMBDA_API_KEY environment variable.")
+        
+        self.client = client = OpenAI(
+            api_key=self.api_key,
+            base_url=self.lambda_url,
+        )
 
         super().__init__(agent_name,
                          base_model,
@@ -256,20 +260,18 @@ class LambdaAgent(Agent):
         pass  # Lambda already deployed
 
     def ask_agent(self, prompt: str) -> str:
+        """Ask agent a question"""
         try:
-            headers = {
-                "Content-Type": "application/json",
-                "x-api-key": self.api_key  # Required by API Gateway if enabled
-            }
-            payload = {
-                "prompt": prompt,
-                "system_prompt": self.system_prompt
-            }
-            response = requests.post(self.lambda_url, headers=headers, json=payload)
-            response.raise_for_status()
-            return response.json().get("response", "")
+            response = self.client.chat.completions.create(
+                model=self.lambda_model,
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": prompt}
+                ],
+            )
+            return response.choices[0].message.content
         except Exception as e:
-            print(f"Error calling Lambda agent: {e}")
+            output_assistant_response(f"Error asking agent: {e}")
             raise
 
     def delete_agent(self) -> None:

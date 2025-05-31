@@ -72,6 +72,12 @@ class AgentCostManager():
             "invoke_expense_cost": 0.29,
             "output_expense_cost": 0.39,
         },
+        "lambda-hermes3-8b": {
+            "description": "High volume and lower intelligence tasks, 60.0% on MMLU, 58.0% on MATH",
+            "create_expense_cost": 0,
+            "invoke_expense_cost": 0.025,
+            "output_expense_cost": 0.04,
+        },
     }
 
     def get_costs(self):
