@@ -66,6 +66,8 @@ The project supports the following language model integrations:
 ## Acknowledgements
 We would like to thank Hugging Face, Groq and Lambda Labs for sponsoring this project and providing the necessary resources for development.
 
+NOTE: Benchmarking efforts of the HASHIRU architecture can be found in [HASHIRUBench](https://github.com/HASHIRU-AI/HASHIRUBench).
+
 ## Contributing
 
 Contributions are welcome! Please submit pull requests with bug fixes, new features, or improvements to the documentation.
