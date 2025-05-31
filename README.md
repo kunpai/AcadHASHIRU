@@ -18,6 +18,12 @@ pinned: false
 
 This project provides a framework for creating and managing AI agents and tools. It includes features for managing resource and expense budgets, loading tools and agents, and interacting with various language models.
 
+The architecture consists of a hierarchical system where a CEO agent manages a set of employee agents and tools. Both agents and tools can be autonomously created, invoked, and deleted by the CEO. Agents are associated with reclaimable costs (if local) and non-reclaimable costs (if cloud-based).
+
+The project is designed to be modular and extensible, allowing users to integrate their own tools and agents. It supports multiple language model integrations, including Ollama, Gemini, Groq, and Lambda Labs.
+
+NOTE: Benchmarking efforts of the HASHIRU architecture can be found in [HASHIRUBench](https://github.com/HASHIRU-AI/HASHIRUBench).
+
 ## Directory Structure
 
 *   **src/**: Contains the source code for the project.
@@ -65,8 +71,6 @@ The project supports the following language model integrations:
 
 ## Acknowledgements
 We would like to thank Hugging Face, Groq and Lambda Labs for sponsoring this project and providing the necessary resources for development.
-
-NOTE: Benchmarking efforts of the HASHIRU architecture can be found in [HASHIRUBench](https://github.com/HASHIRU-AI/HASHIRUBench).
 
 ## Contributing
 
