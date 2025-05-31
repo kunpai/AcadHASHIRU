@@ -63,6 +63,9 @@ The project supports the following language model integrations:
 - **Groq**: Cloud-based model management and invocation from Groq.
 - **Lambda**: Cloud-based model management and invocation from Lambda Labs.
 
+## Acknowledgements
+We would like to thank Hugging Face, Groq and Lambda Labs for sponsoring this project and providing the necessary resources for development.
+
 ## Contributing
 
 Contributions are welcome! Please submit pull requests with bug fixes, new features, or improvements to the documentation.
