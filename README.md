@@ -43,14 +43,25 @@ This project provides a framework for creating and managing AI agents and tools.
 
 ## Usage
 
-To use the project, you need to:
+To use the project, follow these steps:
+1.  Install the required dependencies by running `pip install -r requirements.txt`.
+2.  Start the application by running `python app.py`. This will launch a web interface where you can interact with the agents and tools.
 
-1.  Configure the budget in `src/manager/budget_manager.py`.
+By default, on running `python app.py`, you would need to authenticate with Auth0. But, this can be overriden through the CLI argument `--no-auth` to skip authentication.
+
+To use the project with additional tools and agents, you need to:
+
+1.  Configure the budget in `src/tools/default_tools/agent_cost_manager.py`.
 2.  Create tools and place them in the `src/tools/default_tools` or `src/tools/user_tools` directories.
 
 Please note that by default, we do provide a lot of pre-defined tools and agents, so you may not need to create your own tools unless you have specific requirements.
 
-3. By default, on running `python main.py`, you would need to authenticate with Auth0. But, this can be overriden through the CLI argument `--no-auth` to skip authentication.
+## Model Support
+The project supports the following language model integrations:
+- **Ollama**: Local model management and invocation.
+- **Gemini**: Cloud-based model management and invocation from Google.
+- **Groq**: Cloud-based model management and invocation from Groq.
+- **Lambda**: Cloud-based model management and invocation from Lambda Labs.
 
 ## Contributing
 
