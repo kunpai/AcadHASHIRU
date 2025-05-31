@@ -25,7 +25,8 @@ class Agent(ABC):
                  create_resource_cost: int,
                  invoke_resource_cost: int,
                  create_expense_cost: int = 0,
-                 invoke_expense_cost: int = 0,):
+                 invoke_expense_cost: int = 0,
+                 output_expense_cost: int = 0):
         self.agent_name = agent_name
         self.base_model = base_model
         self.system_prompt = system_prompt
@@ -33,6 +34,7 @@ class Agent(ABC):
         self.invoke_resource_cost = invoke_resource_cost
         self.create_expense_cost = create_expense_cost
         self.invoke_expense_cost = invoke_expense_cost
+        self.output_expense_cost = output_expense_cost
         self.create_model()
 
     @abstractmethod
@@ -60,7 +62,8 @@ class Agent(ABC):
             "create_resource_cost": self.create_resource_cost,
             "invoke_resource_cost": self.invoke_resource_cost,
             "create_expense_cost": self.create_expense_cost,
-            "invoke_expense_cost": self.invoke_expense_cost
+            "invoke_expense_cost": self.invoke_expense_cost,
+            "output_expense_cost": self.output_expense_cost,
         }
 
 
@@ -102,7 +105,8 @@ class GeminiAgent(Agent):
                  create_resource_cost: int,
                  invoke_resource_cost: int,
                  create_expense_cost: int = 0,
-                 invoke_expense_cost: int = 0,):
+                 invoke_expense_cost: int = 0,
+                 output_expense_cost: int = 0):
         load_dotenv()
         self.api_key = os.getenv("GEMINI_KEY")
         if not self.api_key:
@@ -120,7 +124,8 @@ class GeminiAgent(Agent):
                          create_resource_cost,
                          invoke_resource_cost,
                          create_expense_cost,
-                         invoke_expense_cost)
+                         invoke_expense_cost,
+                         output_expense_cost)
 
     def create_model(self):
         self.messages = []
@@ -153,11 +158,13 @@ class GroqAgent(Agent):
         invoke_resource_cost: int,
         create_expense_cost: int = 0,
         invoke_expense_cost: int = 0,
+        output_expense_cost: int = 0
     ):
         # Call the parent class constructor first
         super().__init__(agent_name, base_model, system_prompt,
                          create_resource_cost, invoke_resource_cost,
-                         create_expense_cost, invoke_expense_cost)
+                         create_expense_cost, invoke_expense_cost,
+                         output_expense_cost)
 
         # Groq-specific API client setup
         api_key = os.getenv("GROQ_API_KEY")
@@ -257,6 +264,7 @@ class AgentManager():
                      invoke_resource_cost: float = 0,
                      create_expense_cost: float = 0,
                      invoke_expense_cost: float = 0,
+                     output_expense_cost: float = 0,
                      **additional_params) -> Tuple[Agent, int]:
         if not self.is_creation_enabled:
             raise ValueError("Agent creation mode is disabled.")
@@ -273,6 +281,7 @@ class AgentManager():
             invoke_resource_cost=invoke_resource_cost,
             create_expense_cost=create_expense_cost,
             invoke_expense_cost=invoke_expense_cost,
+            output_expense_cost=output_expense_cost,
             **additional_params  # For any future parameters we might want to add
         )
 
@@ -286,6 +295,7 @@ class AgentManager():
             invoke_resource_cost=invoke_resource_cost,
             create_expense_cost=create_expense_cost,
             invoke_expense_cost=invoke_expense_cost,
+            output_expense_cost=output_expense_cost,
             **additional_params  # For any future parameters we might want to add
         )
         return (self._agents[agent_name],
@@ -311,6 +321,7 @@ class AgentManager():
                            invoke_resource_cost: float = 0,
                            create_expense_cost: float = 0,
                            invoke_expense_cost: float = 0,
+                           output_expense_cost: float = 0,
                            **additional_params) -> Agent:
         agent_type = self._get_agent_type(base_model)
         agent_class = self._agent_types.get(agent_type)
@@ -324,7 +335,8 @@ class AgentManager():
                                     create_resource_cost,
                                     invoke_resource_cost,
                                     create_expense_cost,
-                                    invoke_expense_cost,)
+                                    invoke_expense_cost,
+                                    output_expense_cost,)
 
         self.validate_budget(create_resource_cost,
                              create_expense_cost)
@@ -407,6 +419,9 @@ class AgentManager():
             agent.invoke_expense_cost*n_tokens)
 
         response = agent.ask_agent(prompt)
+        n_tokens = len(response.split())/1000000
+        self.budget_manager.add_to_expense_budget(
+            agent.output_expense_cost*n_tokens)
         return (response,
                 self.budget_manager.get_current_remaining_resource_budget(),
                 self.budget_manager.get_current_remaining_expense_budget())
@@ -420,6 +435,7 @@ class AgentManager():
                     invoke_resource_cost: float = 0,
                     create_expense_cost: float = 0,
                     invoke_expense_cost: float = 0,
+                    output_expense_cost: float = 0,
                     **additional_params) -> None:
         """Save a single agent to the models.json file"""
         try:
@@ -442,6 +458,7 @@ class AgentManager():
                 "invoke_resource_cost": invoke_resource_cost,
                 "create_expense_cost": create_expense_cost,
                 "invoke_expense_cost": invoke_expense_cost,
+                "output_expense_cost": output_expense_cost,
             }
 
             # Add any additional parameters that were passed
@@ -488,6 +505,7 @@ class AgentManager():
                 invoke_resource_cost = data.get("invoke_resource_cost", 0)
                 create_expense_cost = data.get("create_expense_cost", 0)
                 invoke_expense_cost = data.get("invoke_expense_cost", 0)
+                output_expense_cost = data.get("output_expense_cost", 0)
                 model_type = self._get_agent_type(base_model)
                 manager_class = self._agent_types.get(model_type)
 
@@ -502,6 +520,7 @@ class AgentManager():
                         invoke_resource_cost=invoke_resource_cost,
                         create_expense_cost=create_expense_cost,
                         invoke_expense_cost=invoke_expense_cost,
+                        output_expense_cost=output_expense_cost,
                         **data.get("additional_params", {})
                     )
                     self._agents[name] = manager_class(
@@ -512,6 +531,7 @@ class AgentManager():
                         invoke_resource_cost,
                         create_expense_cost,
                         invoke_expense_cost,
+                        output_expense_cost
                     )
         except Exception as e:
             output_assistant_response(f"Error loading agents: {e}")

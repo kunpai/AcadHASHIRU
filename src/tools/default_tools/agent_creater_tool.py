@@ -55,6 +55,7 @@ class AgentCreator():
         invoke_resource_cost = model_costs[base_model].get("invoke_resource_cost", 0)
         create_expense_cost = model_costs[base_model].get("create_expense_cost", 0)
         invoke_expense_cost = model_costs[base_model].get("invoke_expense_cost", 0)
+        output_expense_cost = model_costs[base_model].get("output_expense_cost", 0)
 
         agent_manager = AgentManager()
         try:
@@ -66,7 +67,8 @@ class AgentCreator():
                 create_resource_cost=create_resource_cost,
                 invoke_resource_cost=invoke_resource_cost,
                 create_expense_cost=create_expense_cost,
-                invoke_expense_cost=invoke_expense_cost
+                invoke_expense_cost=invoke_expense_cost,
+                output_expense_cost=output_expense_cost
             )
         except ValueError as e:
             return {
