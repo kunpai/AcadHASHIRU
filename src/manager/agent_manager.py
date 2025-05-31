@@ -3,6 +3,7 @@ from typing import Dict, Type, Any, Optional, Tuple
 import os
 import json
 import ollama
+import requests
 from src.manager.utils.singleton import singleton
 from src.manager.utils.streamlit_interface import output_assistant_response
 from google import genai
@@ -220,6 +221,63 @@ class GroqAgent(Agent):
         """Get agent type"""
         return self.type
 
+class LambdaAgent(Agent):
+    type = "cloud"
+
+    def __init__(self,
+                 agent_name: str,
+                 base_model: str,
+                 system_prompt: str,
+                 create_resource_cost: int,
+                 invoke_resource_cost: int,
+                 create_expense_cost: int = 0,
+                 invoke_expense_cost: int = 0,
+                 output_expense_cost: int = 0,
+                 lambda_url: str = "",
+                 api_key: str = ""):
+        if not lambda_url:
+            raise ValueError("Lambda URL must be provided for LambdaAgent.")
+
+        self.lambda_url = lambda_url
+        self.api_key = api_key or os.getenv("LAMBDA_API_KEY")
+        if not self.api_key:
+            raise ValueError("Lambda API key must be provided or set in LAMBDA_API_KEY environment variable.")
+
+        super().__init__(agent_name,
+                         base_model,
+                         system_prompt,
+                         create_resource_cost,
+                         invoke_resource_cost,
+                         create_expense_cost,
+                         invoke_expense_cost,
+                         output_expense_cost)
+
+    def create_model(self) -> None:
+        pass  # Lambda already deployed
+
+    def ask_agent(self, prompt: str) -> str:
+        try:
+            headers = {
+                "Content-Type": "application/json",
+                "x-api-key": self.api_key  # Required by API Gateway if enabled
+            }
+            payload = {
+                "prompt": prompt,
+                "system_prompt": self.system_prompt
+            }
+            response = requests.post(self.lambda_url, headers=headers, json=payload)
+            response.raise_for_status()
+            return response.json().get("response", "")
+        except Exception as e:
+            print(f"Error calling Lambda agent: {e}")
+            raise
+
+    def delete_agent(self) -> None:
+        pass
+
+    def get_type(self) -> str:
+        return self.type
+
 @singleton
 class AgentManager():
     budget_manager: BudgetManager = BudgetManager()
@@ -233,6 +291,7 @@ class AgentManager():
             "ollama": OllamaAgent,
             "gemini": GeminiAgent,
             "groq": GroqAgent,
+            "lambda": LambdaAgent,
         }
 
         self._load_agents()
@@ -336,7 +395,8 @@ class AgentManager():
                                     invoke_resource_cost,
                                     create_expense_cost,
                                     invoke_expense_cost,
-                                    output_expense_cost,)
+                                    output_expense_cost,
+                                    **additional_params)
 
         self.validate_budget(create_resource_cost,
                              create_expense_cost)
@@ -473,7 +533,6 @@ class AgentManager():
             output_assistant_response(f"Error saving agent {agent_name}: {e}")
 
     def _get_agent_type(self, base_model) -> str:
-
         if base_model == "llama3.2":
             return "ollama"
         elif base_model == "mistral":
@@ -484,8 +543,11 @@ class AgentManager():
             return "gemini"
         elif "groq" in base_model:
             return "groq"
+        elif base_model.startswith("lambda-"):
+            return "lambda"
         else:
             return "unknown"
+
 
     def _load_agents(self) -> None:
         """Load agent configurations from disk"""
