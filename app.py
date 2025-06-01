@@ -173,7 +173,17 @@ def run_model(message, history):
 
 
 with gr.Blocks() as login:
-    btn = gr.Button("Login", link="/login")
+    with gr.Column():
+        gr.HTML("<h1 style='font-size: 3em; text-align: center;'>Welcome to Hashiru AI</h1>")
+        with gr.Column():
+            gr.Markdown("## About Us")
+            gr.Markdown("Hashiru AI is a startup developing an \"Expert Orchestrator AI\" envisioned as a dynamically adapting, budget-aware, and deeply personalized personal assistant designed to evolve with user needs and financial constraints. It addresses the inflexibility, limited capabilities, and potential costliness of current personal assistants by offering a solution that handles novel requests and complex tasks efficiently. A key strength of Hashiru AI is its commitment to personalization; the system continuously learns from user interactions, storing preferences and learning patterns to adapt its behavior and provide a truly tailored experience. Hashiru AI's product utilizes a dynamic multi-agent system where a \"CEO Agent\" manages specialized agents that are created for specific tasks and retired to optimize resources and costs. The system emphasizes cost-consciousness by prioritizing resource-efficient models, tracking expenses, and leveraging local models for a significant portion of complex tasks. Furthermore, it can autonomously create and integrate new API tools, delivering highly customized tools tailored to individual workflows and dynamically expanding its capabilities without manual intervention. The core value proposition of Hashiru AI lies in its profound adaptability, intelligence, and ability to deliver cost savings, all while maintaining a strong focus on user personalization, targeting power users such as professionals, researchers, and creatives who require more sophisticated and individually attuned AI assistance.")
+        with gr.Column():
+            gr.HTML("<img src='https://media.githubusercontent.com/media/HASHIRU-AI/HASHIRU/refs/heads/main/HASHIRU_LOGO.png' alt='Company Image' style='width:200px; height:auto; display:block; margin-left: auto; margin-right: auto;'>") # Replace with your image URL
+        with gr.Row():
+            gr.Markdown("")
+            gr.HTML("<a href='/login' style='display: block; margin: 20px auto; padding: 10px 20px; background-color: #7e7932; color: white; text-align: center; text-decoration: none; border-radius: 5px;'>Login</a>")
+            gr.Markdown("")
 
 app = gr.mount_gradio_app(app, login, path="/login-page")
 
