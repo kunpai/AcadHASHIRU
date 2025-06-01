@@ -18,6 +18,12 @@ pinned: false
 
 This project provides a framework for creating and managing AI agents and tools. It includes features for managing resource and expense budgets, loading tools and agents, and interacting with various language models.
 
+The architecture consists of a hierarchical system where a CEO agent manages a set of employee agents and tools. Both agents and tools can be autonomously created, invoked, and deleted by the CEO. Agents are associated with reclaimable costs (if local) and non-reclaimable costs (if cloud-based).
+
+The project is designed to be modular and extensible, allowing users to integrate their own tools and agents. It supports multiple language model integrations, including Ollama, Gemini, Groq, and Lambda Labs.
+
+NOTE: Benchmarking efforts of the HASHIRU architecture can be found in [HASHIRUBench](https://github.com/HASHIRU-AI/HASHIRUBench).
+
 ## Directory Structure
 
 *   **src/**: Contains the source code for the project.
@@ -43,14 +49,28 @@ This project provides a framework for creating and managing AI agents and tools.
 
 ## Usage
 
-To use the project, you need to:
+To use the project, follow these steps:
+1.  Install the required dependencies by running `pip install -r requirements.txt`.
+2.  Start the application by running `python app.py`. This will launch a web interface where you can interact with the agents and tools.
 
-1.  Configure the budget in `src/manager/budget_manager.py`.
+By default, on running `python app.py`, you would need to authenticate with Auth0. But, this can be overriden through the CLI argument `--no-auth` to skip authentication.
+
+To use the project with additional tools and agents, you need to:
+
+1.  Configure the budget in `src/tools/default_tools/agent_cost_manager.py`.
 2.  Create tools and place them in the `src/tools/default_tools` or `src/tools/user_tools` directories.
 
 Please note that by default, we do provide a lot of pre-defined tools and agents, so you may not need to create your own tools unless you have specific requirements.
 
-3. By default, on running `python main.py`, you would need to authenticate with Auth0. But, this can be overriden through the CLI argument `--no-auth` to skip authentication.
+## Model Support
+The project supports the following language model integrations:
+- **Ollama**: Local model management and invocation.
+- **Gemini**: Cloud-based model management and invocation from Google.
+- **Groq**: Cloud-based model management and invocation from Groq.
+- **Lambda**: Cloud-based model management and invocation from Lambda Labs.
+
+## Acknowledgements
+We would like to thank Hugging Face, Groq and Lambda Labs for sponsoring this project and providing the necessary resources for development.
 
 ## Contributing
 
