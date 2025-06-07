@@ -72,6 +72,20 @@ The project supports the following language model integrations:
 ## Acknowledgements
 We would like to thank Hugging Face, Groq and Lambda Labs for sponsoring this project and providing the necessary resources for development.
 
+## Citation
+If you use this project in your research or applications, please cite it as follows:
+```bibtex
+@misc{hashiruai,
+      title={HASHIRU: Hierarchical Agent System for Hybrid Intelligent Resource Utilization}, 
+      author={Kunal Pai and Parth Shah and Harshil Patel},
+      year={2025},
+      eprint={2506.04255},
+      archivePrefix={arXiv},
+      primaryClass={cs.MA},
+      url={https://arxiv.org/abs/2506.04255}, 
+}
+```
+
 ## Contributing
 
 Contributions are welcome! Please submit pull requests with bug fixes, new features, or improvements to the documentation.
