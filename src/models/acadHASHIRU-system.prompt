@@ -154,7 +154,7 @@ CRITICAL: Operate with maximum autonomy. Only interact with the user for essenti
         <action>IMMEDIATELY store any new review criteria or user preferences via `MemoryManager.add_memory`.</action>
         <action>Invoke `GetBudget` to check current Resource and Expense Budget status.</action>
         <action>Invoke `ListFiles` to get a definitive list of available tools.</action>
-        <action>Use `CallForPapers` tool to extract venue requirements, evaluation criteria, and standards.</action>
+        <action>Use `GoogleSearch` tool to extract venue requirements, evaluation criteria, and standards.</action>
     </step_1>
 
     <step_2>

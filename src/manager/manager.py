@@ -44,7 +44,7 @@ def format_tool_response(response, indent=2):
 
 
 class GeminiManager:
-    def __init__(self, system_prompt_file="./src/models/system6.prompt",
+    def __init__(self, system_prompt_file="./src/models/acadHASHIRU-system.prompt",
                  gemini_model="gemini-2.5-pro-exp-03-25",
                  modes: List[Mode] = []):
         self.input_tokens = 0
