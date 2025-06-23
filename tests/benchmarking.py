@@ -157,13 +157,17 @@ def benchmark_paper_reviews(
             )
 
         elapsed_time = time.time() - iter_start
+        # Read models/models.json
+        with open("models/models.json", "r") as f:
+            reviewer_agents_data = json.load(f)
         result = {
             "paper_id": paper_id,
             "prompt": prompt,
             "agent_review": history,
             "ground_truth": row.get("Decision"),
             "response_history": content,
-            "elapsed_time": elapsed_time
+            "elapsed_time": elapsed_time,
+            "reviewer_agents": reviewer_agents_data
         }
 
         with open(out_file, "a") as fo:
