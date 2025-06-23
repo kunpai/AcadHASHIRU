@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 .env
 .gradio
-results/
+!results/
 
 .DS_Store
 
