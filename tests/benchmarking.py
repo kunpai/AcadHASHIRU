@@ -138,6 +138,7 @@ def benchmark_paper_reviews(
         iter_start = time.time()
         prompt = (
             "Review the following paper for International Conference on Learning Representations (ICLR) 2023. "
+            "Remember you need to make 3 reviewer agents for each paper. "
             "GIVE A FINAL DECISION in the form of \"FINAL DECISION: <Accept/Reject>\". "
             f"The paper title is: {title}\n\n" + row[text_col]
         )
@@ -157,8 +158,8 @@ def benchmark_paper_reviews(
             )
 
         elapsed_time = time.time() - iter_start
-        # Read models/models.json
-        with open("models/models.json", "r") as f:
+        # Read src/models/models.json
+        with open("src/models/models.json", "r") as f:
             reviewer_agents_data = json.load(f)
         result = {
             "paper_id": paper_id,
