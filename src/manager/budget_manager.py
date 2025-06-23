@@ -6,7 +6,7 @@ import psutil
 class BudgetManager():
     total_resource_budget = 100
     current_resource_usage = 0
-    total_expense_budget = 10
+    total_expense_budget = 10000
     current_expense = 0
     is_budget_initialized = False
     is_resource_budget_enabled = True
